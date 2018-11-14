@@ -2,6 +2,7 @@
 #include<string>
 #include<memory>
 #include<unordered_map>
+#include<shared_mutex>
 
 #ifndef DisJointSet_H
 #define DisJointSet_H
@@ -25,6 +26,7 @@ template<typename T> class DisJointSet
 			~Node() { }
 		};
 
+	std::shared_mutex m_mutex;
 	std::unordered_map<T, std::shared_ptr<Node> > m_map;
 	std::shared_ptr<Node> getParent(const std::shared_ptr<Node>&);
 

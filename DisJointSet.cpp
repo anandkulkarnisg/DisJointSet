@@ -14,9 +14,13 @@ template<typename T> DisJointSet<T>::DisJointSet()
 
 template<typename T> bool DisJointSet<T>::makeSet(const T& input)
 {
+	{
+	shared_lock<shared_mutex> readLock(m_mutex);
 	if(m_map.find(input) != m_map.end())
 		return(false);
+	}
 
+	unique_lock<shared_mutex> exclusiveLock(m_mutex);
 	shared_ptr<Node> m_ptr = make_shared<Node>(input);
 	m_ptr->m_parent = m_ptr;
 	m_map[input] = m_ptr;
@@ -38,9 +42,13 @@ template<typename T> shared_ptr<typename DisJointSet<T>::Node> DisJointSet<T>::g
 
 template<typename T> bool DisJointSet<T>::makeUnion(const T& input1, const T& input2)
 {
-	if(m_map.find(input1) == m_map.end() || m_map.find(input2) == m_map.end())
-		return(false);
+	{
+		shared_lock<shared_mutex> readLock(m_mutex);
+		if(m_map.find(input1) == m_map.end() || m_map.find(input2) == m_map.end())
+			return(false);
+	}
 
+	unique_lock<shared_mutex> exclusiveLock(m_mutex);
 	shared_ptr<Node> node1 = m_map.find(input1)->second;
 	shared_ptr<Node> node2 = m_map.find(input2)->second;
 
@@ -63,6 +71,7 @@ template<typename T> bool DisJointSet<T>::makeUnion(const T& input1, const T& in
 
 template<typename T> T DisJointSet<T>::findSet(const T& input)
 {
+	shared_lock<shared_mutex> readLock(m_mutex);
 	const auto& item = m_map.find(input);
 	T result;
 	if(item == m_map.end())
