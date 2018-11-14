@@ -16,3 +16,6 @@ To Run Examples.
 ./Example2.out
 ./Example3.out.
 
+
+- Note : The project can be imported using eclipse CDT C++ build environment and GUI development can be done easily.
+
