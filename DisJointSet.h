@@ -21,6 +21,8 @@ template<typename T> class DisJointSet
 				m_rank=0;
 				m_parent=nullptr;
 			}
+
+			~Node() { }
 		};
 
 	std::unordered_map<T, std::shared_ptr<Node> > m_map;
