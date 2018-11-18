@@ -14,13 +14,12 @@ template<typename T> class DisJointSet
 		{
 			T m_data;
 			int m_rank;
-			std::shared_ptr<Node> m_parent;
+			std::weak_ptr<Node> m_parent;
 
 			Node(const T& input=0)
 			{
 				m_data=input;
 				m_rank=0;
-				m_parent=nullptr;
 			}
 
 			~Node() { }

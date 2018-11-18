@@ -30,12 +30,12 @@ template<typename T> bool DisJointSet<T>::makeSet(const T& input)
 template<typename T> shared_ptr<typename DisJointSet<T>::Node> DisJointSet<T>::getParent(const shared_ptr<typename DisJointSet<T>::Node>& input)
 {
 	shared_ptr<Node> current = input;
-	shared_ptr<Node> parent = input->m_parent;
+	shared_ptr<Node> parent = input->m_parent.lock();
 
 	while(current != parent)
 	{
-		current=current->m_parent;
-		parent=parent->m_parent;
+		current=current->m_parent.lock();
+		parent=parent->m_parent.lock();
 	}
 	return(parent);
 }
@@ -83,11 +83,6 @@ template<typename T> T DisJointSet<T>::findSet(const T& input)
 template<typename T> DisJointSet<T>::~DisJointSet()
 {
 	// For nodes pointing to themselves as parent in shared_ptr it can cause memory leak. reset them before cleaning the map. else memory leak will occur!
-	for(auto& iter : m_map)
-	{
-		if(iter.second->m_parent == iter.second)
-			iter.second->m_parent=nullptr;
-	}
 	m_map.clear();
 }
 
